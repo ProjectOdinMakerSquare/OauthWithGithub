@@ -227,9 +227,17 @@ Devise.setup do |config|
   config.sign_out_via = :delete
 
   # ==> OmniAuth
+  require "omniauth-github"
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-  # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+
+  # On OS/X, for development only, it may be easiest just to disable
+  # certificate verification because the certificates are stored in the keychain,
+  # not the file system
+  OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
+
+  GITHUB_CONFIG = YAML.load_file("#{::Rails.root}/config/github.yml")[::Rails.env]
+  config.omniauth :github, GITHUB_CONFIG['app_id'], GITHUB_CONFIG['secret'], scope: 'user, user:email, user:public_repo'
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

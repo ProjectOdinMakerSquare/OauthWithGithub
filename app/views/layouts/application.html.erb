@@ -7,7 +7,44 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
+  <nav class="top-bar">
+      <ul class="title-area">
+          <li class="name">
+            <h1>
+              <%= link_to 'Users', users_path %>
+            </h1>
+          </li>
+        <li class="toggle-topbar menu-icon">
+          <a href="#">
+            <span>Menu</span>
+          </a>
+        </li>
+      </ul>
+      <section class="top-bar-section">
+        <ul class="right">
+          <% if user_signed_in? %>
+            <li>
+              <%= link_to current_user.name, user_url(current_user) %>
+            </li>
+            <li>
+              <%= link_to 'Edit Profile', edit_user_registration_path %>
+            </li>
+            <li>
+              <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+      <div class="row">
+        <div class="large-12 columns">
+          <% if flash.present? %>
+            <% flash.each do |name, msg| %>
+              <%= content_tag :div, msg, class: name %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
 <%= yield %>
 
 </body>
